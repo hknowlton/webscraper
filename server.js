@@ -10,6 +10,8 @@ var request = require("request");
 var cheerio = require("cheerio");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
+var PORT = process.env.PORT || 3000;
+var path = require("path");
 
 
 // Initialize Express
@@ -42,6 +44,12 @@ db.once("open", function() {
 // Routes
 // ======
 
+//Show the home page
+app.get("/", function(req, res){
+  res.sendFile(path.join(__dirname, "home.html"));
+  console.log("home page");
+});
+
 // A GET request to scrape the echojs website
 app.get("/scrape", function(req, res) {
 
@@ -59,8 +67,6 @@ app.get("/scrape", function(req, res) {
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this).children("a").attr("aria-label");
       result.link = $(this).children("a").attr("href");
-
-
 
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
@@ -151,6 +157,6 @@ app.post("/articles/:id", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(PORT, function() {
   console.log("App running on port 3000!");
 });
