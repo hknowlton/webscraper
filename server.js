@@ -44,29 +44,25 @@ db.once("open", function() {
 // Routes
 // ======
 
-//Show the home page
-app.get("/", function(req, res){
-  res.sendFile(path.join(__dirname, "home.html"));
-  console.log("home page");
-});
-
 // A GET request to scrape the echojs website
 app.get("/scrape", function(req, res) {
 
   // First, we grab the body of the html with request
-  request("http://www.msn.com/en-ca/news/offbeat/", function(error, response, html) {
+  request("http://comicsalliance.com/", function(error, response, html) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
-    
+  
     var $ = cheerio.load(html);
     // Now, we grab every h2 within an article tag, and do the following:
-    $("li.smalla").each(function(i, element) {
-    console.log("they see me scraping");
+    $('h2.title').each(function(i, element) {
+    console.log("they see me scraping");   
 
       // Save an empty result object
       var result = {};
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this).children("a").attr("aria-label");
-      result.link = $(this).children("a").attr("href");
+      //result.title = $(this).children("a").attr("aria-label");
+      //result.link = $(this).children("a").attr("href");
+      result.title= $(this).children("a").attr("title")
+      result.link= $(this).children("a").attr("href")
 
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
@@ -87,14 +83,14 @@ app.get("/scrape", function(req, res) {
     });
   });
   // Tell the browser that we finished scraping the text
-  res.send("Scrape Complete");
+  res.redirect("/articles");
 });
 
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
   // Grab every doc in the Articles array
   Article.find({}, function(error, doc) {
-    // Log any errors
+    //Log any errors
     if (error) {
       console.log(error);
     }
