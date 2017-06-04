@@ -33,9 +33,9 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 
 //Local Database configuration with mongoose
-mongoose.connect("mongodb://localhost/articleDB");
+//mongoose.connect("mongodb://localhost/articleDB");
 //to deploy use
-//mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
+mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
 var db = mongoose.connection;
 
 // Show any mongoose errors
