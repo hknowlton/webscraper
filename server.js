@@ -1,5 +1,6 @@
 // Dependencies
 var express = require("express");
+var exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 // Requiring our Note and Article models
@@ -17,13 +18,19 @@ var path = require("path");
 // Initialize Express
 var app = express();
 
-// Use morgan and body parser with our app
+// Use body parser with our app
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 
 // Make public a static dir
 app.use(express.static("public"));
+
+//Setting handlebars as view engine
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main'
+}));
+app.set('view engine', 'handlebars');
 
 // Database configuration with mongoose
   //to deploy change to mongolab-colorful-86831
@@ -43,6 +50,9 @@ db.once("open", function() {
 
 // Routes
 // ======
+app.get("/", function(req,res){
+  res.render('index');
+});
 
 // A GET request to scrape the echojs website
 app.get("/scrape", function(req, res) {
@@ -96,7 +106,9 @@ app.get("/articles", function(req, res) {
     }
     // Or send the doc to the browser as a json object
     else {
-      res.json(doc);
+      res.render('scrape',{
+        allArticles: doc
+      });
     }
   });
 });
@@ -115,7 +127,9 @@ app.get("/articles/:id", function(req, res) {
     }
     // Otherwise, send the doc to the browser as a json object
     else {
-      res.json(doc);
+      res.render('savedArticles',{
+        articles: doc
+      });
     }
   });
 });
@@ -124,18 +138,37 @@ app.get("/articles/:id", function(req, res) {
 // Create a new note or replace an existing note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
-  var newNote = new Note(req.body);
+  console.log(req)
+  // var newNote = new Note(req.body);
 
-  // And save the new note the db
-  newNote.save(function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Otherwise
-    else {
-      // Use the article id to find and update it's note
-      Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
+  // // And save the new note the db
+  // newNote.save(function(error, doc) {
+  //   // Log any errors
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   // Otherwise
+  //   else {
+  //     // Use the article id to find and update it's note
+  //     Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
+  //     // Execute the above query
+  //     .exec(function(err, doc) {
+  //       // Log any errors
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //       else {
+  //         // Or send the document to the browser
+  //         res.send(doc);
+  //       }
+  //     });
+  //   }
+  // });
+});
+
+//saving an article
+app.post("/save/:id", function(req,res){
+      Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": true })
       // Execute the above query
       .exec(function(err, doc) {
         // Log any errors
@@ -144,13 +177,27 @@ app.post("/articles/:id", function(req, res) {
         }
         else {
           // Or send the document to the browser
-          res.send(doc);
+          res.redirect("/articles");
         }
+      });
+
+})
+
+app.get("/saved", function(req,res){
+    // Grab every saved doc in the Articles db
+  Article.find({'saved': true}, function(error, doc) {
+    //Log any errors
+    if (error) {
+      console.log(error);
+    }
+    // Or send the doc to the browser as a json object
+    else {
+      res.render('savedArticles',{
+        allArticles: doc
       });
     }
   });
 });
-
 
 // Listen on port 3000
 app.listen(PORT, function() {
