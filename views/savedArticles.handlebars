@@ -1,20 +1,27 @@
 <div class="row">
-    <h1>Saved articles</h1>
-    <div id="articles">
-        {{#each allArticles}}
-        <div class="input-group">
-            <a href="{{this.link}}" target="_blank" class="form-control">{{this.title}}</a>
-            <span class="input-group-btn">
-              <form method="POST" action="/delete/{{this.id}}">
-                <button type="submit" class="btn btn-secondary">Delete Article</button>
-              </form>
-            </span>
-            <span class="input-group-btn">
-                 <form method="GET" action="/articles/{{this.id}}">
-                    <button type="submit" class="btn btn-secondary">Comment</button>
-                </form>
-            </span>
-        {{/each}}
+<div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="panel panel-default">
+            <h1>Saved articles</h1>
+            <div id="articles">
+                {{#each allArticles}}
+                <div class="input-group">
+                    <a href="{{this.link}}" target="_blank" class="form-control" id="articleTitle">{{this.title}}</a>
+                    <span class="input-group-btn">
+                      <form method="POST" action="/delete/{{this.id}}">
+                        <button type="submit" class="btn btn-secondary">Delete Article</button>
+                      </form>
+                    </span>
+                    <span class="input-group-btn">
+                         <form method="GET" action="/articles/{{this.id}}">
+                            <button type="submit" class="btn btn-secondary">Comment</button>
+                        </form>
+                    </span>
+                </div>
+                {{/each}}
+                
+            </div>
         </div>
     </div>
+<div class="col-md-1"></div>
 </div>
