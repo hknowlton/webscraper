@@ -115,6 +115,7 @@ app.get("/articles", function(req, res) {
 
 // Grab an article by it's ObjectId
 app.get("/articles/:id", function(req, res) {
+  console.log("get the comments")
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   Article.findOne({ "_id": req.params.id })
   // ..and populate all of the notes associated with it
@@ -127,7 +128,7 @@ app.get("/articles/:id", function(req, res) {
     }
     // Otherwise, send the doc to the browser as a json object
     else {
-      res.render('savedArticles',{
+      res.render('comments',{
         articles: doc
       });
     }
@@ -138,6 +139,7 @@ app.get("/articles/:id", function(req, res) {
 // Create a new note or replace an existing note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
+  console.log("i got a post")
   console.log(req)
   // var newNote = new Note(req.body);
 
