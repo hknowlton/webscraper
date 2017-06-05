@@ -38,9 +38,9 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 
 //Local Database configuration with mongoose
-//mongoose.connect("mongodb://localhost/articleDB");
+mongoose.connect("mongodb://localhost/articleDB");
 //to deploy un-comment the below
-mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
+//mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -176,7 +176,7 @@ app.post("/save/:id", function(req, res) {
           console.log(err);
       } else {
         // Or send the user back to the all articles page once it saved
-        res.redirect("/articles");
+        res.redirect("/saved");
       }
     });
 })
@@ -190,8 +190,8 @@ app.put("/delete/:id", function(req, res) {
       if (err) {
           console.log(err);
       } else {
-        // Or send the user back to the all articles page once it saved
-        res.redirect("/articles");
+        //basically.. refresh the page
+        res.redirect("/saved");
       }
     });
 })
