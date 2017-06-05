@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Make public a static dir
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, '/public')));
 
 // override with POST having ?_method=PUT
 app.use(methodOverride('_method'))
@@ -38,9 +38,9 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 
 //Local Database configuration with mongoose
-mongoose.connect("mongodb://localhost/articleDB");
+//mongoose.connect("mongodb://localhost/articleDB");
 //to deploy un-comment the below
-//mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
+mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
 var db = mongoose.connection;
 
 // Show any mongoose errors

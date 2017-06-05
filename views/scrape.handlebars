@@ -1,16 +1,17 @@
-  <div class="row">
-  <h1>All articles</h1>
-    <div id="articles">
-        {{#each allArticles}}
-        <div class = "input-group">
-            <a href="{{this.link}}" target="_blank" class="form-control">{{this.title}}</a>
-            <span class="input-group-btn">
-              <form method="POST" action="/save/{{this.id}}">
-                <button type="submit" class="btn btn-secondary">Save Article</button>
-              </form>
-            </span>
-
-        </div>
-        {{/each}}
+<div class="col-md-1"></div>
+  <div class="well well-lg col-md-10">
+    <div class="row">
+      <h1>All articles</h1>
+          {{#each allArticles}}
+          <div class = "input-group">
+                <a href="{{this.link}}" target="_blank" class="form-control">{{this.title}}</a>
+                <span class="input-group-btn">
+                  <form method="POST" action="/save/{{this.id}}">
+                    <button type="submit" class="btn btn-secondary">Save Article</button>
+                  </form>
+                </span>
+          </div>
+          {{/each}}
     </div>
-</div>
+  </div>
+<div class="col-md-1"></div>

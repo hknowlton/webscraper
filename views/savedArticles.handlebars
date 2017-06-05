@@ -1,9 +1,7 @@
-<div class="row">
 <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <div class="panel panel-default">
+    <div class="well well-lg col-md-10">
+        <div class="row">
             <h1>Saved articles</h1>
-            <div id="articles">
                 {{#each allArticles}}
                 <div class="input-group">
                     <a href="{{this.link}}" target="_blank" class="form-control" id="articleTitle">{{this.title}}</a>
@@ -14,14 +12,11 @@
                     </span>
                     <span class="input-group-btn">
                          <form method="GET" action="/articles/{{this.id}}">
-                            <button type="submit" class="btn btn-secondary">Comment</button>
+                            <button type="submit" class="btn btn-secondary">Note</button>
                         </form>
                     </span>
-                </div>
+                    </div>
                 {{/each}}
-                
-            </div>
         </div>
     </div>
 <div class="col-md-1"></div>
-</div>
