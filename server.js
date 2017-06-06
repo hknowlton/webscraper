@@ -38,7 +38,7 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 
 //Local Database configuration with mongoose
-//mongoose.connect("mongodb://localhost/articleDB");
+//mongoose.connect("mongodb://localhost/jobsDB");
 //to deploy un-comment the below
 mongoose.connect("mongodb://heroku_htkv646v:8i7hgdnv85219v2d43reo1flbc@ds157571.mlab.com:57571/heroku_htkv646v")
 var db = mongoose.connection;
@@ -61,55 +61,55 @@ app.get("/", function(req, res) {
     res.render('index');
 });
 
-// A GET request to scrape the comics website
+// A GET request to scrape the craigslist website
 app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with request
     request("https://atlanta.craigslist.org/search/web", function(error, response, html) {
         // Then, we load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(html);
-        // Now, we grab every h2 within an article tag, and do the following:
+        // select the parent element that has the data we want
         $('.result-info').each(function(i, element) {
             // Save an empty result object
             var result = {};
             // Add the text and href of every link, and save them as properties of the result object
             result.title = $(this).children("a").text()
             result.link = $(this).children("a").attr("href")
-            
+            //some links we scraped are not formatted and are root links. 
+              //Here we check for that and format if necessary
             var checkRootLink = result.link.startsWith("/")
-
             if (checkRootLink) {
               result.link = "https://craigslist.org" + result.link
             }
-                // Using our Article model, create a new entry
+              // Using our Article model, create a new entry
                 // This effectively passes the result object to the entry (and the title and link)
             var entry = new Article(result);
             // Now, save that entry to the db
             entry.save(function(err, doc) {
                 // Log any errors
                 if (err) {
-                    console.log("Article already scraped" + err);
+                    console.log("Job already scraped" + err);
                 }
                 // Or log the doc
                 else {
-                    console.log("Scraped this info into our DB" + doc);
+                    console.log("Scraped this job into our DB" + doc);
                 }
             });
 
         });
     });
-    // Bring you to the all articles list when it is done scrapign
+    // Bring you to the all jobs list when it is done scraping
     res.redirect("/articles");
 });
 
-// This will get the articles we scraped from the mongoDB
+// This will get the jobs we scraped from the mongoDB
 app.get("/articles", function(req, res) {
-  // Grab every doc in the Articles array
+  // Grab every doc 
   Article.find({}, function(error, doc) {
       //Log any errors
       if (error) {
           console.log(error);
       }
-      // if no errors render our page with the articles we scraped
+      // if no errors render our page with the jobs we scraped
       else {
           res.render('scrape', {
               allArticles: doc
@@ -118,7 +118,7 @@ app.get("/articles", function(req, res) {
   });
 });
 
-// Grab an article by it's ObjectId and load the notes
+// Grab a job by it's ObjectId and load the notes
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter 
     //prepare a query that finds the matching one in our db...
@@ -155,7 +155,7 @@ app.post("/articles/:id", function(req, res) {
     }
     // Otherwise
     else {
-      // Use the article id to find and update it's note
+      // Use the job id to find and update it's note
       Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
         // Execute the above query
         .exec(function(err, doc) {
@@ -171,7 +171,7 @@ app.post("/articles/:id", function(req, res) {
   });
 });
 
-//saving an article
+//saving a job
 app.post("/save/:id", function(req, res) {
   Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": true })
     // Execute the above query
@@ -180,13 +180,13 @@ app.post("/save/:id", function(req, res) {
       if (err) {
           console.log(err);
       } else {
-        // Or send the user back to the all articles page once it saved
+        // Or send the user back to the all jobs page once it saved
         res.redirect("/saved");
       }
     });
 })
 
-//deleting the article form the saved list
+//deleting a job form the saved list
 app.put("/delete/:id", function(req, res) {
   Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": false })
     // Execute the above query
@@ -201,14 +201,14 @@ app.put("/delete/:id", function(req, res) {
     });
 })
 
-//showing the saved articles
+//showing the saved jobs
 app.get("/saved", function(req, res) {
-  // Grab every saved doc in the Articles db
+  // Grab every saved doc in the jobs db
   Article.find({ 'saved': true }, function(error, doc) {
     //Log any errors
     if (error) {
         console.log(error);
-    // If no errors render the page with the saved articles
+    // If no errors render the page with the saved jobs
     } else {
         res.render('savedArticles', {
             allArticles: doc
