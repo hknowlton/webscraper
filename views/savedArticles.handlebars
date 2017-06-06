@@ -1,13 +1,13 @@
 <div class="col-md-1"></div>
     <div class="well well-lg col-md-10">
         <div class="row">
-            <h1>Saved articles</h1>
+            <h1>Saved Jobs</h1>
                 {{#each allArticles}}
                 <div class="input-group">
                     <a href="{{this.link}}" target="_blank" class="form-control" id="articleTitle">{{this.title}}</a>
                     <span class="input-group-btn">
                       <form method="POST" action="/delete/{{this.id}}?_method=PUT">
-                        <button type="submit" class="btn btn-secondary">Delete Article</button>
+                        <button type="submit" class="btn btn-secondary">Delete Job</button>
                       </form>
                     </span>
                     <span class="input-group-btn">

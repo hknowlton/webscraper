@@ -78,7 +78,7 @@ app.get("/scrape", function(req, res) {
             var checkRootLink = result.link.startsWith("/")
 
             if (checkRootLink) {
-              result.link = "craigslist.org" + result.link
+              result.link = "https://craigslist.org" + result.link
             }
                 // Using our Article model, create a new entry
                 // This effectively passes the result object to the entry (and the title and link)
